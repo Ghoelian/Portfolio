@@ -1,0 +1,2 @@
+This is a Snake game that I'm actually pretty proud of. There are some glitches, like a new piece of the tail spawning in the upper left corner, but as far as I know, those are things I can't help. It's something weird with Processing.
+Made in Processing 3
