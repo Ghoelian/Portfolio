@@ -15,6 +15,8 @@ let tailPosY = [];
 let rows = windowY / cubeSize;
 let cols = windowX / cubeSize;
 
+let gameStart = false;
+
 let dir = 3;
 
 let time = 0;
@@ -43,6 +45,8 @@ function draw() {
   background(52);
   time += 1;
 
+
+
   showPlayer();
   movePlayer();
   drawFruit();
@@ -50,30 +54,54 @@ function draw() {
 
   fill(255);
   textSize(30);
+  textAlign(LEFT);
   text(score, 0, 25);
+
+  if (gameStart == false) {
+    startScreen();
+  }
 
   if (gameOver()) {
     fill(255, 0, 0);
     textSize(32);
-    text("Game Over", width / 2 - 80, height / 2);
+    textAlign(CENTER);
+    text("Game Over", width / 2, height / 2);
     textSize(19);
-    text("Press 'R' to restart", width / 2 - 80, height / 2 + 20);
-		noLoop();
+    text("Press 'R' to restart", width / 2, height / 2 + 20);
+    noLoop();
   }
 }
 
 function keyPressed() {
-  if (keyCode == 87 && dir != 3) {
+  if (keyCode == 87 && dir != 3 && gameStart == true) {
     dir = 1;
-  } else if (keyCode == 65 && dir != 2) {
+  } else if (keyCode == 65 && dir != 2 && gameStart == true) {
     dir = 4;
-  } else if (keyCode == 83 && dir != 1) {
+  } else if (keyCode == 83 && dir != 1 && gameStart == true) {
     dir = 3;
-  } else if (keyCode == 68 && dir != 4) {
+  } else if (keyCode == 68 && dir != 4 && gameStart == true) {
     dir = 2;
   } else if (keyCode == 82 && gameOver()) {
-		loop();
+    loop();
     restart();
+  }
+
+  if (keyCode == 87 && dir != 3 && gameStart == false) {
+    gameStart = true;
+    loop();
+    dir = 1;
+  } else if (keyCode == 65 && dir != 2 && gameStart == false) {
+    gameStart = true;
+    loop();
+    dir = 4;
+  } else if (keyCode == 83 && dir != 1 && gameStart == false) {
+    gameStart = true;
+    loop();
+    dir = 3;
+  } else if (keyCode == 68 && dir != 4 && gameStart == false) {
+    gameStart = true;
+    loop();
+    dir = 2;
   }
 }
 
@@ -189,4 +217,18 @@ function restart() {
   for (let i = 14; i >= 12; i--) {
     tailPosY.push(i);
   }
+}
+
+function startScreen() {
+  fill(255, 255, 255);
+
+  textAlign(CENTER);
+  textSize(32);
+
+  text("Use WASD to move", width/2, height / 2);
+
+  textSize(19);
+  text("Press W, A, S or D to start", width / 2, height / 2 + 20);
+
+  noLoop();
 }
