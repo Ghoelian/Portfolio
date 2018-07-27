@@ -10,6 +10,14 @@
 int currentLevel = 1;                            // Keeps track of the current level
 int endPosX = 0;                                 // Keeps track of the x/y of the exit of the level
 int endPosY = 0;
+int highlighted = 1;                             // Keeps track of which option is highlighted in the enemy encounter
+boolean enemyEncounter = true;                  // Keeps track of if you're on an enemy encounter
+float enemyHealthFloat = (1 + ((currentLevel - 1) * 0.8)) * 100;
+float playerHealthFloat = (1 + ((currentLevel - 1) * 0.8)) * 100;
+int playerHealth = floor(playerHealthFloat);
+int enemyHealth = floor(enemyHealthFloat);
+boolean hit = false;
+boolean miss = false;
 
 int[][] level = new int[15][15];                 // Empty array where the level gets copied to then get edited
 
@@ -56,7 +64,7 @@ void setup() {
 
   cubeSize = width / 15;
 
-  //for (int i = 0; i < cubeSize; i++) {
+  //for (int i = 0; i < cubeSize; i++) {            // Draws a grid (when uncommented)
   //  if (i > 0) {
   //    line(i * cubeSize, 0, i * cubeSize, height);
   //    line(0, i * cubeSize, width, i * cubeSize);
@@ -70,7 +78,11 @@ void draw() {
   background(100);
   noStroke();
 
-  showLevel();        // Draws the level on the screen, taken from the 'level' array
+  if (enemyEncounter == true) {
+    enemyEncounter();    // Triggers an enemy encounter
+  } else {
+    showLevel();        // Draws the level on the screen, taken from the 'level' array
+  }
 }
 
 void copyLevel(int[][] a) {          // Just copies the entire array over to a new array
@@ -117,16 +129,107 @@ void showLevel() {
   }
 }
 
+void enemyEncounter() {
+  textAlign(CENTER);
+
+  fill(0, 255, 0);          // Draws the player sprite
+  rect(50, 300, 200, 200);
+
+  fill(255, 0, 0);          // Draws the enemy sprite
+  rect(500, 100, 200, 200);
+
+  fill(0);                 // Draws the player's/enemy's HP
+  textSize(50);
+  text(playerHealth, 150, 425);
+  text(enemyHealth, width - 150, 225);
+
+  stroke(0);
+  noFill();
+  rect(5, 550, width - 10, 195, 20);    // Draws the dialogue box
+
+  if (hit == true) {              // Draws the hit/miss text
+    fill(0);
+    textSize(50);
+    text("Hit!", width/2, 625);
+  } else if (miss == true) {
+    fill(0);
+    textSize(50);
+    text("Miss!", width/2, 625);
+  } else {
+    if (highlighted == 1) {        // Draws the fight/item/run text and highlights the selected one
+      fill(255);
+    } else {
+      fill(0);
+    }
+
+    textSize(50);
+    text("Attack", 100, 625);
+
+    if (highlighted == 2) {
+      fill(255);
+    } else {
+      fill(0);
+    }
+
+    text("Item", width - 100, 625);
+
+    if (highlighted == 3) {
+      fill(255);
+    } else {
+      fill(0);
+    }
+
+    text("Run", width / 2, 725);
+  }
+}
+
 /*
  LEFT: 37
  UP: 38
  RIGHT: 39
  DOWN: 40
+ ENTER: 10
  */
 
 void keyPressed() {
   int playerPosX = 0;  // Stores the initial player position in level 1, later gets updated when pressing the arrow keys to move
   int playerPosY = 14;
+
+  if (enemyEncounter == true) {
+    if (highlighted == 1 && keyCode == 39) {      // Moves the highlighted option around in an enemy encounter
+      highlighted = 2;
+    } else if (highlighted == 2 && keyCode == 37) {
+      highlighted = 1;
+    } else if (keyCode == 40) {
+      highlighted = 3;
+    } else if (highlighted == 3 && keyCode == 38) {
+      highlighted = 1;
+    } else if (highlighted == 3 && keyCode == 37) {
+      highlighted = 1;
+    } else if (highlighted == 3 && keyCode == 39) {
+      highlighted = 2;
+    }
+
+    if (hit == true || miss == true) {        // Returns the hit/miss to false once the player presses enter
+      hit = false;
+      miss = false;
+    }
+
+    if (highlighted == 1 && keyCode == 10) {    // Attacks the enemy
+      int luck = ceil(random(100));
+      int health = ceil(random(15));
+
+      if (luck > 30) {                      // If luck > 30, player hits enemy, else, enemy hits player for a random amount of hp
+        enemyHealth -= health;
+        hit = true;
+        highlighted = 0;
+      } else {
+        playerHealth -= health;
+        miss = true;
+        highlighted = 0;
+      }
+    }
+  }
 
   if (keyCode == 37) {
     for (int i = 0; i < 15; i++) {
@@ -139,6 +242,10 @@ void keyPressed() {
     }
 
     if (playerPosX != 0) {        // Checks if the player isn't next to a wall on the left side
+      if (level[playerPosY][playerPosX - 1] == 3) {  // Checks if the space the player wants to move to is an enemy
+        enemyEncounter = true;
+      }
+
       if (level[playerPosY][playerPosX - 1] != 1) { // Checks if the space the player is trying to move to (to the left in this case) isn't a wall
         level[playerPosY][playerPosX - 1] = 2;      // Updates the player's position
         level[playerPosY][playerPosX] = 0;
@@ -159,6 +266,10 @@ void keyPressed() {
     }
 
     if (playerPosY != 0) {
+      if (level[playerPosY - 1][playerPosX] == 3) {
+        enemyEncounter = true;
+      }
+
       if (level[playerPosY - 1][playerPosX] != 1) {
         level[playerPosY - 1][playerPosX] = 2;
         level[playerPosY][playerPosX] = 0;
@@ -179,6 +290,10 @@ void keyPressed() {
     }
 
     if (playerPosX != 14) {
+      if (level[playerPosY][playerPosX + 1] == 3) {
+        enemyEncounter = true;
+      }
+
       if (level[playerPosY][playerPosX + 1] != 1) {
         level[playerPosY][playerPosX + 1] = 2;
         level[playerPosY][playerPosX] = 0;
@@ -199,6 +314,10 @@ void keyPressed() {
     }
 
     if (playerPosY != 14) {
+      if (level[playerPosY + 1][playerPosX] == 3) {
+        enemyEncounter = true;
+      }
+
       if (level[playerPosY + 1][playerPosX] != 1) {
         level[playerPosY + 1][playerPosX] = 2;
         level[playerPosY][playerPosX] = 0;
