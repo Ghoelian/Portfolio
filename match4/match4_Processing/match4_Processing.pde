@@ -100,7 +100,8 @@ void mousePressed() {
 void gameOver(int player) {
   textSize(40);
   fill(0);
-  text("Player " + player + " has won!", 50, height/2);
+  textAlign(CENTER);
+  text("Player " + player + " has won!", width/2, height/2);
   gameOver = true;
 }
 
