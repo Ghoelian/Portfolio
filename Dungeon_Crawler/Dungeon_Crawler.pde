@@ -272,6 +272,7 @@ void keyPressed() {
           runFailed = false;
         } else {                                          // Ends the enemy encounter, and resets the enemy's health for the next one
           enemyEncounter = false;
+          highlighted = 1;
 
           enemyHealthFloat = ((random(5, 10) + ((currentLevel - 1) * 10)) * 10);
           enemyHealth = floor(enemyHealthFloat);
