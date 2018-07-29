@@ -6,6 +6,7 @@ Just a simple dungeon crawler, where you can move around 2 levels (for now), pic
 
 # Dungeon Crawler Editor
 This is a level editor for the dungeon crawler. You can place walls with A, chests with S, enemies with D, the player with F and the exit with G. If you press enter, a 2-dimensional array will be printed out into the console. You can then copy this into the dungeon crawler as a level.
+This one isn't usable as an executable, you need the console for the array it puts out.
 
 # Match 4
 Just a simple match 4 game.
