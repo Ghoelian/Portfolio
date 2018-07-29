@@ -1,4 +1,4 @@
-/* //<>//
+/* //<>// //<>//
  Nothing = 0,
  Wall = 1,
  Player = 2,
@@ -11,19 +11,19 @@ int items = 0;
 int currentLevel = 1;                            // Keeps track of the current level
 int endPosX = 0;                                 // Keeps track of the x/y of the exit of the level
 int endPosY = 0;
-int highlighted = 1;        // Keeps track of which option is highlighted in the enemy encounter
+int highlighted = 1;                             // Keeps track of which option is highlighted in the enemy encounter
 boolean enemyEncounter = false;                  // Keeps track of if you're on an enemy encounter
 float enemyHealthFloat = ((random(5, 10) + ((currentLevel - 1) * 10)) * 10);    // Gives the enemy a slightly random health
 float playerHealthFloat = (1 + ((currentLevel - 1) * 0.8)) * 100;               // Gives the player health based on the level he's on
-int playerHealth = floor(playerHealthFloat);    // Floors the player's health
-int enemyHealth = floor(enemyHealthFloat);      // Floors the enemy's health
+int playerHealth = floor(playerHealthFloat);      // Floors the player's health
+int enemyHealth = floor(enemyHealthFloat);        // Floors the enemy's health
 boolean hit = false;                              // Keeps track of if you've hit/missed an attack
 boolean miss = false;
 boolean runFailed = false;
 
-int[][] level = new int[15][15];                 // Empty array where the level gets copied to then get edited
+int[][] level = new int[15][15];                  // Empty array where the level gets copied to then get edited
 
-int[][] level1 = new int[][] {                   // Layout of the levels
+int[][] level1 = new int[][] {                    // Layout of the levels
   {0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 4}, 
   {0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0}, 
   {0, 0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 1, 0, 0, 0}, 
@@ -223,7 +223,7 @@ void enemyEncounter() {
  ENTER: 10
  */
 
-void keyPressed() {
+void keyPressed() {  
   int playerPosX = 0;  // Stores the initial player position in level 1, later gets updated when pressing the arrow keys to move
   int playerPosY = 14;
 
@@ -247,7 +247,7 @@ void keyPressed() {
       miss = false;
     }
 
-    if (highlighted == 1 && keyCode == 10) {    // Attacks the enemy
+    if (highlighted == 1 && keyCode == 90) {    // Attacks the enemy
       int luck = ceil(random(100));
       int health = ceil(random(15));
 
@@ -260,10 +260,10 @@ void keyPressed() {
         miss = true;
         highlighted = 0;
       }
-    } else if (highlighted == 2 && items > 0 && keyCode == 10) {      // Uses an item to restore health (if you have one)
+    } else if (highlighted == 2 && items > 0 && keyCode == 90) {      // Uses an item to restore health (if you have one)
       playerHealth += 50;
       items--;
-    } else if (highlighted == 3 && keyCode == 10) {                  // Attempts to run
+    } else if (highlighted == 3 && keyCode == 90) {                  // Attempts to run
       int luck = ceil(random(100));
       int health = ceil(random(15));
 
