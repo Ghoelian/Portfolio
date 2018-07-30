@@ -16,16 +16,15 @@ boolean ballMove = false;
 
 PFont square;
 
-
 void setup() {
   size(700, 400);
 
   square = createFont("square.ttf", 32, true);
 
-  p1y = height/2;
+  p1y = height/2;      // Starts p1 and p2 out in the middle of the screen
   p2y = height/2;
 
-  ballX = width/2;
+  ballX = width/2;     // Starts the ball out in the middle of the screen
   ballY = height/2;
 }
 
@@ -39,38 +38,38 @@ void draw() {
   edges();
 }
 
-void p1() {
+void p1() {                  // Draws p1's paddle
   rectMode(CENTER);
   fill(255);
   rect(16, p1y, 16, height / 7);
 
-  if (p1up == true && p1y - 30 > 0) {
+  if (p1up == true && p1y - 30 > 0) {        // Moves the player up if p1up is true
     p1y -= speed;
-  } else if (p1down == true && p1y + 30 < height) {
+  } else if (p1down == true && p1y + 30 < height) {  // Moves the player down if p1down is true
     p1y += speed;
   }
 }
 
 void p2() {
-  rectMode(CENTER);
+  rectMode(CENTER);    // Draws p2's paddle
   fill(255);
   rect(width - 16, p2y, 16, height / 7);
 
-  if (p2up == true && p2y - 30 > 0) {
+  if (p2up == true && p2y - 30 > 0) {  // Moves the paddle up if p2up is true
     p2y -= speed;
-  } else if (p2down == true && p2y + 30 < height) {
+  } else if (p2down == true && p2y + 30 < height) {    // Moves the paddle down if p2down is true
     p2y += speed;
   }
 }
 
 void ball() {
-  fill(255);
+  fill(255);        // Draws the ball
   ellipse(ballX, ballY, 16, 16);
 
-  if (ballMove == true) {
+  if (ballMove == true) {    // Moves the ball if it's allowed to
     ballX += xSpeed;
     ballY += ySpeed;
-  } else {
+  } else {                   // Shows the "Perss enter to start" text if someone has just scored a point or if the game was just started
     textAlign(CENTER, CENTER);
     fill(0, 0, 0, 255);
     textSize(20);
@@ -79,30 +78,30 @@ void ball() {
 }
 
 void edges() {
-  if (ballY - 8 <= 0 || ballY + 8 >= height) {
+  if (ballY - 8 <= 0 || ballY + 8 >= height) {    // Checks if the ball is on the top/down edges of the screen
     ySpeed = ySpeed * -1;
   }
 
-  if (ballX - 8 >= width - 40 && ballY >= p2y - 30 && ballY <= p2y + 30 && ballX - 8 <= width - 30) {
+  if (ballX - 8 >= width - 40 && ballY >= p2y - 30 && ballY <= p2y + 30 && ballX - 8 <= width - 30) {    // Checks if the ball hit the right paddle
     xSpeed = xSpeed * -1;
   }
 
-  if (ballX + 8 <= 40 && ballY >= p1y - 30 && ballY <= p1y + 30 && ballX >= 30) {
+  if (ballX + 8 <= 40 && ballY >= p1y - 30 && ballY <= p1y + 30 && ballX >= 30) {   // Checks if the ball hit the left paddle
     xSpeed = xSpeed * -1;
   }
 
-  if (ballX <= 0) {
+  if (ballX <= 0) {    // Increments the score and resets ball if the ball is off the right of the screen
     p2score++;
     resetBall();
   }
 
-  if (ballX >= width) {
+  if (ballX >= width) { // Increments the score and resets ball if the ball is off the left of the screen
     p2score++;
     resetBall();
   }
 }
 
-void resetBall() {
+void resetBall() {      // Resets the ball back to the middle, and makes it not move
   ballX = width / 2;
   ballY = height / 2;
 
@@ -110,38 +109,38 @@ void resetBall() {
 }
 
 void keyPressed() {
-  if (keyCode == 87) {
+  if (keyCode == 87) {        // Sets p1up/p1down to true if the W or S keys are held down
     p1up = true;
   } else if (keyCode == 83) {
     p1down = true;
   }
 
-  if (keyCode == 38) {
+  if (keyCode == 38) {      // Sets p2up/p2down to true if the up or down keys are held down
     p2up = true;
   } else if (keyCode == 40) {
     p2down = true;
   }
 
-  if (keyCode == 10 && ballMove == false) {
+  if (keyCode == 10 && ballMove == false) {    // Makes the ball move if you press enter
     ballMove = true;
   }
 }
 
 void keyReleased() {
-  if (keyCode == 87) {
+  if (keyCode == 87) {        // Sets p1up/p1down to false if the W or S keys are let go of
     p1up = false;
   } else if (keyCode == 83) {
     p1down = false;
   }
 
-  if (keyCode == 38) {
+  if (keyCode == 38) {        // Sets p2up/p2down to false if the up or down keys are let go of
     p2up = false;
   } else if (keyCode == 40) {
     p2down = false;
   }
 }
 
-void score() {
+void score() {        // Draws the scores on the screen
   int textX = height / 2;
 
   textFont(square);
@@ -150,7 +149,7 @@ void score() {
   textSize(width/2);
   fill(0, 0, 0, 50);
 
-  if (p1score >= 10) {
+  if (p1score >= 10) {    // Makes the text size smaller if the score >= 10
     textSize(width/3);
   }
 
