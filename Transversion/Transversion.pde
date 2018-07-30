@@ -44,6 +44,11 @@ boolean bulletBmove = false;
 boolean bulletCmove = false;
 boolean bulletDmove = false;
 
+boolean bulletAshot = false;
+boolean bulletBshot = false;
+boolean bulletCshot = false;
+boolean bulletDshot = false;
+
 PImage player;
 PImage shooter;
 
@@ -58,13 +63,9 @@ void draw() {
   background(100);
 
   drawGrid();
-  text(shooterApos, 0, 10);
-  text(playerX, 0, 20);
-  text(temp, 40, 10);
 
-  if (shooterApos == playerX) {
+  if (shooterApos == playerX || shooterApos + 1 == playerX || shooterApos - 1 == playerX) {
     shoot("A");
-    temp++;
   } else if (shooterBpos == playerY) {
     shoot("B");
   } else if (shooterCpos == playerX) {
@@ -80,6 +81,7 @@ void draw() {
   showShooter();
 
   bulletMove();
+  shooting();
 
 
 
@@ -189,26 +191,20 @@ void showShooter() {
 void moveShooter() {
   if (shooterApos >= cols - 2) {
     shooterAdir = 2;
-    shooterAhasShot = false;
   } else if (shooterApos <= 2) {
     shooterAdir = 1;
-    shooterAhasShot = false;
   }
 
   if (shooterBpos >= rows - 2) {
     shooterBdir = 2;
-    shooterBhasShot = false;
   } else if (shooterBpos <= 2) {
     shooterBdir = 1;
-    shooterBhasShot = false;
   }
 
   if (shooterCpos >= cols - 2) {
     shooterCdir = 2;
-    shooterChasShot = false;
   } else if (shooterCpos <= 2) {
     shooterCdir = 1;
-    shooterChasShot = false;
   }
 
   if (shooterDpos >= rows - 2) {
@@ -250,28 +246,32 @@ void shoot(String x) {
   switch(x) {
   case "A":
     if (shooterAhasShot == false) {
-      bulletAposX = shooterApos;
-      bulletAmove = true;
+      bulletAshot = true;
       shooterAhasShot = true;
     }
   case "B":
     if (shooterBhasShot == false) {
-      bulletBposY = shooterBpos;
-      bulletBmove = true;
+      bulletBshot = true;
       shooterBhasShot = true;
     }
   case "C":
     if (shooterChasShot == false) {
-      bulletCposX = shooterCpos;
-      bulletCmove = true;
+      bulletCshot = true;
       shooterChasShot = true;
     }
   case "D":
     if (shooterDhasShot == false) {
-      bulletDposY = shooterDpos;
-      bulletDmove = true;
+      bulletDshot = true;
       shooterDhasShot = true;
     }
+  }
+}
+
+void shooting() {
+  if (bulletAshot == true && shooterAhasShot == false) {
+    bulletAposX = playerX;
+    bulletAmove = true;
+    bulletAshot = false;
   }
 }
 
@@ -280,12 +280,15 @@ void bulletMove() {
     ellipseMode(CENTER);
     ellipse((bulletAposX * gridSize) - (gridSize / 2), (bulletAposY * gridSize) - (gridSize / 2), gridSize, gridSize);
 
+    print(bulletAposX, "\n");
     if (timer % speed == 0) {
       bulletAposY++;
     }
 
     if (bulletAposY >= rows) {
       bulletAmove = false;
+      shooterAhasShot = false;
+      bulletAposY = 0;
     }
   }
 }
