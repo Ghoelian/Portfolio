@@ -43,9 +43,9 @@ void p1() {                  // Draws p1's paddle
   fill(255);
   rect(16, p1y, 16, height / 7);
 
-  if (p1up == true && p1y - 30 > 0) {        // Moves the player up if p1up is true
+  if (p1up == true && p1y - (height / 7) / 2 > 2) {        // Moves the player up if p1up is true
     p1y -= speed;
-  } else if (p1down == true && p1y + 30 < height) {  // Moves the player down if p1down is true
+  } else if (p1down == true && p1y + (height / 7) / 2 < height - 2) {  // Moves the player down if p1down is true
     p1y += speed;
   }
 }
@@ -55,9 +55,9 @@ void p2() {
   fill(255);
   rect(width - 16, p2y, 16, height / 7);
 
-  if (p2up == true && p2y - 30 > 0) {  // Moves the paddle up if p2up is true
+  if (p2up == true && p2y - (height / 7) / 2 > 2) {  // Moves the paddle up if p2up is true
     p2y -= speed;
-  } else if (p2down == true && p2y + 30 < height) {    // Moves the paddle down if p2down is true
+  } else if (p2down == true && p2y + (height / 7) / 2 < height - 2) {    // Moves the paddle down if p2down is true
     p2y += speed;
   }
 }
