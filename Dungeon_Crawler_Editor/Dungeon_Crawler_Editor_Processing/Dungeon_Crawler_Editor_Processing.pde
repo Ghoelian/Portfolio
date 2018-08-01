@@ -22,6 +22,7 @@ void setup() {
 
   cubeSize = width / 15;
 }
+
 void draw() {
   background(150);
 

@@ -1,4 +1,4 @@
-/* //<>// //<>//
+/* //<>//
  Nothing = 0,
  Wall = 1,
  Player = 2,
@@ -7,97 +7,111 @@
  Exit = 5
  */
 
-int items = 0;
-int currentLevel = 1;                            // Keeps track of the current level
-int endPosX = 0;                                 // Keeps track of the x/y of the exit of the level
-int endPosY = 0;
-int highlighted = 1;                             // Keeps track of which option is highlighted in the enemy encounter
-boolean enemyEncounter = false;                  // Keeps track of if you're on an enemy encounter
-float enemyHealthFloat = ((random(5, 10) + ((currentLevel - 1) * 10)) * 10);    // Gives the enemy a slightly random health
-float playerHealthFloat = (1 + ((currentLevel - 1) * 0.8)) * 100;               // Gives the player health based on the level he's on
-int playerHealth = floor(playerHealthFloat);      // Floors the player's health
-int enemyHealth = floor(enemyHealthFloat);        // Floors the enemy's health
-boolean hit = false;                              // Keeps track of if you've hit/missed an attack
-boolean miss = false;
-boolean runFailed = false;
+var items = 0;
+var currentLevel = 1;                            // Keeps track of the current level
+var endPosX = 0;                                 // Keeps track of the x/y of the exit of the level
+var endPosY = 0;
+var highlighted = 1;                             // Keeps track of which option is highlighted in the enemy encounter
+var enemyEncounter = false;                  // Keeps track of if you're on an enemy encounter
+var enemyHealth = Math.floor((getRandom(5, 10) + ((currentLevel - 1) * 10)) * 10);      // Floors the player's health
+var playerHealth = Math.floor((1 + ((currentLevel - 1) * 0.8)) * 100);        // Floors the enemy's health
+var hit = false;                              // Keeps track of if you've hit/missed an attack
+var miss = false;
+var runFailed = false;
 
-int[][] level = new int[15][15];                  // Empty array where the level gets copied to then get edited
+var level = createArray(15, 15);                   // Empty array where the level gets copied to then get edited
 
-int[][] level1 = new int[][] {                    // Layout of the levels
-  {0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 4}, 
-  {0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0}, 
-  {0, 0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 1, 0, 0, 0}, 
-  {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0}, 
-  {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, 
-  {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1}, 
-  {0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-  {0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0}, 
-  {0, 0, 0, 1, 4, 0, 1, 4, 0, 0, 1, 0, 0, 0, 0}, 
-  {0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0}, 
-  {0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 1, 1, 1, 1, 0}, 
-  {0, 3, 0, 3, 0, 3, 1, 0, 0, 0, 1, 0, 0, 0, 0}, 
-  {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0}, 
-  {1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3}, 
-  {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 0}, 
-};
+var level1 = [                          // Layout of the levels
+  [0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 4], 
+  [0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 1, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1], 
+  [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0], 
+  [0, 0, 0, 1, 4, 0, 1, 4, 0, 0, 1, 0, 0, 0, 0], 
+  [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 1, 1, 1, 1, 0], 
+  [0, 3, 0, 3, 0, 3, 1, 0, 0, 0, 1, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0], 
+  [1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3], 
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 0], 
+];
 
-int[][] level2 =  {
-  {4, 0, 0, 0, 3, 4, 1, 0, 0, 0, 0, 0, 3, 0, 0}, 
-  {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0}, 
-  {0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0}, 
-  {1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0}, 
-  {4, 0, 1, 0, 0, 0, 3, 0, 0, 1, 0, 0, 1, 0, 0}, 
-  {0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, 
-  {3, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 3, 1, 0, 0}, 
-  {0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 3, 4, 1, 0, 3}, 
-  {1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0}, 
-  {0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 1, 0}, 
-  {0, 0, 1, 0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 1, 0}, 
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0}, 
-  {0, 0, 1, 3, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0}, 
-  {1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0}, 
-  {4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0}, 
-};
+var level2 =  [
+  [4, 0, 0, 0, 3, 4, 1, 0, 0, 0, 0, 0, 3, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0], 
+  [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0], 
+  [4, 0, 1, 0, 0, 0, 3, 0, 0, 1, 0, 0, 1, 0, 0], 
+  [0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 
+  [3, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 3, 1, 0, 0], 
+  [0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 3, 4, 1, 0, 3], 
+  [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0], 
+  [0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 1, 0], 
+  [0, 0, 1, 0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 1, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0], 
+  [0, 0, 1, 3, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0], 
+  [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0], 
+  [4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0], 
+];
 
-int cubeSize;
+var cubeSize;
 
-void setup() {
-  size(750, 750);
+function setup() {
+  createCanvas(750, 750);
 
   cubeSize = width / 15;
 
-  //for (int i = 0; i < cubeSize; i++) {            // Draws a grid (when uncommented)
-  //  if (i > 0) {
+  //for (var i = 0; i < cubeSize; i++) [            // Draws a grid (when uncommented)
+  //  if (i > 0) [
   //    line(i * cubeSize, 0, i * cubeSize, height);
   //    line(0, i * cubeSize, width, i * cubeSize);
-  //  }
-  //}
+  //  ]
+  //]
 
   copyLevel(level1);    // Copies the entire level to an empty array
 }
 
-void draw() {
+function draw() {
   background(100);
   noStroke();
 
   if (enemyEncounter == true) {
-    enemyEncounter();    // Triggers an enemy encounter
+    enemyEncounterFunction();    // Triggers an enemy encounter
   } else {
     showLevel();        // Draws the level on the screen, taken from the 'level' array
   }
 }
 
-void copyLevel(int[][] a) {          // Copies the entire array over to a new array
-  for (int i = 0; i < 15; i++) {
-    for (int j = 0; j < 15; j++) {
+function getRandom(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function copyLevel(a = [[]]) {          // Copies the entire array over to a new array
+  for (var i = 0; i < 15; i++) {
+    for (var j = 0; j < 15; j++) {
       level[i][j] = a[i][j];
     }
   }
 }
 
-void showLevel() {
-  for (int i = 0; i < 15; i++) {        // Stores the exit of the level in some variables
-    for (int j = 0; j < 15; j++) {
+function createArray(length) {
+  var arr = new Array(length || 0),
+      i = length;
+
+  if (arguments.length > 1) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      while(i--) arr[length-1 - i] = createArray.apply(this, args);
+  }
+
+  return arr;
+}
+
+function showLevel() {
+  for (var i = 0; i < 15; i++) {        // Stores the exit of the level in some variables
+    for (var j = 0; j < 15; j++) {
       if (level[i][j] == 5) {
         endPosX = j;
         endPosY = i;
@@ -137,7 +151,7 @@ void showLevel() {
   text("Items: " + items, 0, height);
 }
 
-void enemyEncounter() {
+function enemyEncounterFunction() {
   textAlign(CENTER);
 
   fill(0, 255, 0);          // Draws the player sprite
@@ -163,21 +177,21 @@ void enemyEncounter() {
     fill(0);
     textSize(50);
     text("Miss!", width/2, 625);
-  } else {
+   } else {
     if (highlighted == 1) {        // Draws the fight/item/run text and highlights the selected one
       fill(255);
-    } else {
+     } else {
       fill(0);
-    }
+     }
 
     textSize(50);
     text("Attack", 100, 625);
 
     if (highlighted == 2) {
       fill(255);
-    } else {
+     } else {
       fill(0);
-    }
+     }
 
     text("Item", width - 100, 625);
     textSize(30);
@@ -223,9 +237,9 @@ void enemyEncounter() {
  ENTER: 10
  */
 
-void keyPressed() {  
-  int playerPosX = 0;  // Stores the initial player position in level 1, later gets updated when pressing the arrow keys to move
-  int playerPosY = 14;
+function keyPressed() {  
+  var playerPosX = 0;  // Stores the initial player position in level 1, later gets updated when pressing the arrow keys to move
+  var playerPosY = 14;
 
   if (enemyEncounter == true) {
     if (highlighted == 1 && keyCode == 39) {      // Moves the highlighted option around in an enemy encounter
@@ -247,9 +261,9 @@ void keyPressed() {
       miss = false;
     }
 
-    if (highlighted == 1 && keyCode == 90) {    // Attacks the enemy
-      int luck = ceil(random(100));
-      int health = ceil(random(15));
+    if (highlighted == 1 && keyCode == 13) {    // Attacks the enemy
+      var luck = Math.ceil(getRandom(0, 100));
+      var health = Math.ceil(getRandom(0, 15));
 
       if (luck > 30) {                      // If luck > 30, player hits enemy, else, enemy hits player for a random amount of hp
         enemyHealth -= health;
@@ -260,12 +274,12 @@ void keyPressed() {
         miss = true;
         highlighted = 0;
       }
-    } else if (highlighted == 2 && items > 0 && keyCode == 90) {      // Uses an item to restore health (if you have one)
+    } else if (highlighted == 2 && items > 0 && keyCode == 13) {      // Uses an item to restore health (if you have one)
       playerHealth += 50;
       items--;
-    } else if (highlighted == 3 && keyCode == 90) {                  // Attempts to run
-      int luck = ceil(random(100));
-      int health = ceil(random(15));
+    } else if (highlighted == 3 && keyCode == 13) {                  // Attempts to run
+      var luck = Math.ceil(getRandom(0, 100));
+      var health = Math.ceil(getRandom(0, 15));
 
       if (luck > 20) {
         if (runFailed == true) {                          // Restores the runFailed variable back to false if you've already failed to run
@@ -274,8 +288,7 @@ void keyPressed() {
           enemyEncounter = false;
           highlighted = 1;
 
-          enemyHealthFloat = ((random(5, 10) + ((currentLevel - 1) * 10)) * 10);
-          enemyHealth = floor(enemyHealthFloat);
+          enemyHealth = Math.floor((getRandom(5, 10) + ((currentLevel - 1) * 10)) * 10);
         }
       } else if (luck <= 20) {
         if (runFailed == true) {                            // Restores the runFailed variable back to false if you've already failed to run
@@ -293,8 +306,7 @@ void keyPressed() {
     if (enemyHealth <= 0 && highlighted == 0) {            // Ends the enemy encounter if it's health is <= 0, and resets the enemy's health for the next encounter
       enemyEncounter = false;
 
-      enemyHealthFloat = ((random(5, 10) + ((currentLevel - 1) * 10)) * 10);
-      enemyHealth = floor(enemyHealthFloat);
+      enemyHealth = Math.floor((getRandom(5, 10) + ((currentLevel - 1) * 10)) * 10);        // Floors the enemy's health
     }
   } else {
     if (hit == true || miss == true) {        // Returns the hit/miss to false once the player presses enter
@@ -306,9 +318,9 @@ void keyPressed() {
 
 
     if (keyCode == 37) {
-      for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
-          if (level[i][j] == 2) {      // Stores the current player pos into the variables
+      for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 15; j++) {
+          if (level[i][j] == 2) {      // Stores the current player pos varo the variables
             playerPosX = j;
             playerPosY = i;
           }
@@ -332,8 +344,8 @@ void keyPressed() {
     }
 
     if (keyCode == 38) {            // Same as above, but for moving up
-      for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
+      for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 15; j++) {
           if (level[i][j] == 2) {
             playerPosX = j;
             playerPosY = i;
@@ -358,8 +370,8 @@ void keyPressed() {
     }
 
     if (keyCode == 39) {        // Same as above, but for moving right
-      for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
+      for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 15; j++) {
           if (level[i][j] == 2) {
             playerPosX = j;
             playerPosY = i;
@@ -384,8 +396,8 @@ void keyPressed() {
     }
 
     if (keyCode == 40) {          // Same as above, but for moving down
-      for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
+      for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 15; j++) {
           if (level[i][j] == 2) {
             playerPosX = j;
             playerPosY = i;
@@ -414,11 +426,9 @@ void keyPressed() {
   if (playerPosX == endPosX && playerPosY == endPosY) {  // Checks if the player is standing on the exit. If so, move on to the next level
     currentLevel++;
 
-    playerHealthFloat = (1 + ((currentLevel - 1) * 0.8)) * 100;        // When you get to the next level, health gets reset and increased based on the level you're on
-    playerHealth = floor(playerHealthFloat);
+    playerHealth = Math.floor((1 + ((currentLevel - 1) * 0.8)) * 100);
 
-    enemyHealthFloat = ((random(5, 10) + ((currentLevel - 1) * 10)) * 10);    // Enemy health also potentially increases on higher floors
-    enemyHealth = floor(enemyHealthFloat);
+    enemyHealth = Math.floor((getRandom(5, 10) + ((currentLevel - 1) * 10)) * 10);        // Floors the enemy's health
 
     switch(currentLevel) {
     case 1:

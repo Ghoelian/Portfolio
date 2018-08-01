@@ -16,6 +16,11 @@ var ballMove = false;
 
 function preload() {
   square = loadFont('fonts/square.ttf');
+  soundFormats("wav");
+
+  wall = loadSound("sound/wall.wav");
+  points = loadSound("sound/point.wav");
+  paddle = loadSound("sound/paddle.wav");
 }
 
 function setup() {
@@ -26,6 +31,10 @@ function setup() {
 
   ballX = width/2;     // Starts the ball out in the middle of the screen
   ballY = height/2;
+
+  wall.setVolume(1);
+  points.setVolume(1);
+  paddle.setVolume(1);
 }
 
 function draw() {
@@ -41,7 +50,7 @@ function draw() {
 function p1() {                  // Draws p1's paddle
   rectMode(CENTER);
   fill(255);
-  rect(16, p1y, 16, height / 7);
+  rect(16, p1y, 16, height / 7, 5);
 
   if (p1up == true && p1y - (height / 7) / 2 > 2) {        // Moves the player up if p1up is true
     p1y -= speed;
@@ -53,7 +62,7 @@ function p1() {                  // Draws p1's paddle
 function p2() {
   rectMode(CENTER);    // Draws p2's paddle
   fill(255);
-  rect(width - 16, p2y, 16, height / 7);
+  rect(width - 16, p2y, 16, height / 7, 5);
 
   if (p2up == true && p2y - (height / 7) / 2 > 2) {  // Moves the paddle up if p2up is true
     p2y -= speed;
@@ -80,23 +89,28 @@ function ball() {
 function edges() {
   if (ballY - 8 <= 0 || ballY + 8 >= height) {    // Checks if the ball is on the top/down edges of the screen
     ySpeed = ySpeed * -1;
+    wall.play();
   }
 
   if (ballX - 8 >= width - 40 && ballY >= p2y - 30 && ballY <= p2y + 30 && ballX - 8 <= width - 30) {    // Checks if the ball hit the right paddle
     xSpeed = xSpeed * -1;
+    paddle.play();
   }
 
   if (ballX + 8 <= 40 && ballY >= p1y - 30 && ballY <= p1y + 30 && ballX >= 30) {   // Checks if the ball hit the left paddle
     xSpeed = xSpeed * -1;
+    paddle.play();
   }
 
   if (ballX <= 0) {    // Increments the score and resets ball if the ball is off the right of the screen
     p2score++;
+    points.play();
     resetBall();
   }
 
   if (ballX >= width) { // Increments the score and resets ball if the ball is off the left of the screen
     p2score++;
+    points.play();
     resetBall();
   }
 }

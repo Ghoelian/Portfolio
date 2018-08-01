@@ -1,3 +1,5 @@
+import processing.sound.*;
+
 int p1y;
 int p2y;
 int speed = 5;
@@ -15,6 +17,9 @@ boolean p2down = false;
 boolean ballMove = false;
 
 PFont square;
+SoundFile wall;
+SoundFile paddle;
+SoundFile point;
 
 void setup() {
   size(700, 400);
@@ -25,7 +30,11 @@ void setup() {
   p2y = height/2;
 
   ballX = width/2;     // Starts the ball out in the middle of the screen
-  ballY = height/2;
+  ballY = height/2; 
+  
+  wall = new SoundFile(this, "wall.wav");
+  paddle = new SoundFile(this, "paddle.wav");
+  point = new SoundFile(this, "point.wav");
 }
 
 void draw() {
@@ -41,7 +50,7 @@ void draw() {
 void p1() {                  // Draws p1's paddle
   rectMode(CENTER);
   fill(255);
-  rect(16, p1y, 16, height / 7);
+  rect(16, p1y, 16, height / 7, 5);
 
   if (p1up == true && p1y - (height / 7) / 2 > 2) {        // Moves the player up if p1up is true
     p1y -= speed;
@@ -53,7 +62,7 @@ void p1() {                  // Draws p1's paddle
 void p2() {
   rectMode(CENTER);    // Draws p2's paddle
   fill(255);
-  rect(width - 16, p2y, 16, height / 7);
+  rect(width - 16, p2y, 16, height / 7, 5);
 
   if (p2up == true && p2y - (height / 7) / 2 > 2) {  // Moves the paddle up if p2up is true
     p2y -= speed;
@@ -80,23 +89,28 @@ void ball() {
 void edges() {
   if (ballY - 8 <= 0 || ballY + 8 >= height) {    // Checks if the ball is on the top/down edges of the screen
     ySpeed = ySpeed * -1;
+    wall.play();
   }
 
   if (ballX - 8 >= width - 40 && ballY >= p2y - 30 && ballY <= p2y + 30 && ballX - 8 <= width - 30) {    // Checks if the ball hit the right paddle
     xSpeed = xSpeed * -1;
+    paddle.play();
   }
 
   if (ballX + 8 <= 40 && ballY >= p1y - 30 && ballY <= p1y + 30 && ballX >= 30) {   // Checks if the ball hit the left paddle
     xSpeed = xSpeed * -1;
+    paddle.play();
   }
 
   if (ballX <= 0) {    // Increments the score and resets ball if the ball is off the right of the screen
     p2score++;
+    point.play();
     resetBall();
   }
 
   if (ballX >= width) { // Increments the score and resets ball if the ball is off the left of the screen
     p2score++;
+    point.play();
     resetBall();
   }
 }
