@@ -3,8 +3,8 @@ int rows = 20;
 int cols = 31;
 int timer = 0;
 
-int playerX = 14;
-int playerY = 10;
+int playerX = 12;
+int playerY = 12;
 int playerDir = 1;
 int playerRotation = 0;
 
@@ -23,16 +23,23 @@ int shooterDdir = 2;
 int bulletAposX = 0;
 int bulletBposX = 0;
 int bulletCposX = 0;
-int bulletDposX = 0;
+int bulletDposX = cols;
 
 int bulletAposY = 0;
 int bulletBposY = 0;
-int bulletCposY = 0;
+int bulletCposY = rows;
 int bulletDposY = 0;
+
+int lives = 4;
 
 int speed = 10;
 
 boolean canMove = true;
+
+boolean shooterAcanMove = true;
+boolean shooterBcanMove = true;
+boolean shooterCcanMove = true;
+boolean shooterDcanMove = true;
 
 boolean shooterAhasShot = false;
 boolean shooterBhasShot = false;
@@ -64,13 +71,43 @@ void draw() {
 
   drawGrid();
 
-  if (shooterApos == playerX || shooterApos + 1 == playerX || shooterApos - 1 == playerX) {
+  if (shooterApos == playerX && shooterAcanMove == true) {
     shoot("A");
-  } else if (shooterBpos == playerY) {
+  } else if (shooterApos + 1 == playerX && shooterAcanMove == true) {
+    shooterApos++;
+    shoot("A");
+  } else if (shooterApos - 1 == playerX && shooterAcanMove == true) {
+    shooterApos--;
+    shoot("A");
+  }
+
+  if (shooterBpos == playerY && shooterBcanMove == true) {
     shoot("B");
-  } else if (shooterCpos == playerX) {
+  } else if (shooterBpos + 1 == playerY && shooterBcanMove == true) {
+    shooterBpos++;
+    shoot("B");
+  } else if (shooterBpos - 1 == playerY && shooterBcanMove == true) {
+    shooterBpos--;
+    shoot("B");
+  }
+
+  if (shooterCpos == playerX && shooterCcanMove == true) {
     shoot("C");
-  } else if (shooterDpos == playerY) {
+  } else if (shooterCpos + 1 == playerX && shooterCcanMove == true) {
+    shooterCpos++;
+    shoot("C");
+  } else if (shooterCpos - 1 == playerX && shooterCcanMove == true) {
+    shooterCpos--;
+    shoot("C");
+  }
+
+  if (shooterDpos == playerY && shooterDcanMove == true) {
+    shoot("D");
+  } else if (shooterDpos + 1 == playerY && shooterDcanMove == true) {
+    shooterDpos++;
+    shoot("D");
+  } else if (shooterDpos - 1 == playerY && shooterDcanMove == true) {
+    shooterDpos--;
     shoot("D");
   }
 
@@ -84,10 +121,11 @@ void draw() {
   shooting();
 
 
-
   if (timer % speed == 0) {
     canMove = true;
   }
+  
+  text(lives, 0, 10);
 
   timer += 1;
 }
@@ -209,78 +247,150 @@ void moveShooter() {
 
   if (shooterDpos >= rows - 2) {
     shooterDdir = 2;
-    shooterDhasShot = false;
   } else if (shooterDpos <= 2) {
     shooterDdir = 1;
-    shooterDhasShot = false;
   }
 
   if (timer % speed == 0) {  
-    if (shooterAdir == 1) {
-      shooterApos++;
-    } else if (shooterAdir == 2) {
-      shooterApos--;
+    if (shooterAcanMove == true) {
+      if (shooterAdir == 1) {
+        shooterApos++;
+      } else if (shooterAdir == 2) {
+        shooterApos--;
+      }
     }
 
-    if (shooterBdir == 1) {
-      shooterBpos++;
-    } else if (shooterBdir == 2) {
-      shooterBpos--;
+    if (shooterBcanMove == true) {
+      if (shooterBdir == 1) {
+        shooterBpos++;
+      } else if (shooterBdir == 2) {
+        shooterBpos--;
+      }
     }
 
-    if (shooterCdir == 1) {
-      shooterCpos++;
-    } else if (shooterCdir == 2) {
-      shooterCpos--;
+    if (shooterCcanMove == true) {
+      if (shooterCdir == 1) {
+        shooterCpos++;
+      } else if (shooterCdir == 2) {
+        shooterCpos--;
+      }
     }
 
-    if (shooterDdir == 1) {
-      shooterDpos++;
-    } else if (shooterDdir == 2) {
-      shooterDpos--;
+    if (shooterDcanMove == true) {
+      if (shooterDdir == 1) {
+        shooterDpos++;
+      } else if (shooterDdir == 2) {
+        shooterDpos--;
+      }
     }
   }
 }
 
 void shoot(String x) {
-  switch(x) {
-  case "A":
+  if (x == "A") {
     if (shooterAhasShot == false) {
       bulletAshot = true;
       shooterAhasShot = true;
     }
-  case "B":
+  }
+
+  if (x == "B") {
     if (shooterBhasShot == false) {
       bulletBshot = true;
       shooterBhasShot = true;
     }
-  case "C":
+  }
+
+  if (x == "C") {
     if (shooterChasShot == false) {
       bulletCshot = true;
       shooterChasShot = true;
     }
-  case "D":
+  }
+
+  if (x == "D") {
     if (shooterDhasShot == false) {
       bulletDshot = true;
       shooterDhasShot = true;
     }
   }
+
+  //switch(x) {
+  //case "A":
+  //  if (shooterAhasShot == false) {
+  //    bulletAshot = true;
+  //    shooterAhasShot = true;
+  //  }
+  //case "B":
+  //  if (shooterBhasShot == false) {
+  //    bulletBshot = true;
+  //    shooterBhasShot = true;
+  //  }
+  //case "C":
+  //  if (shooterChasShot == false) {
+  //    bulletCshot = true;
+  //    shooterChasShot = true;
+  //  }
+  //case "D":
+  //  if (shooterDhasShot == false) {
+  //    bulletDshot = true;
+  //    shooterDhasShot = true;
+  //  }
+  //}
 }
 
 void shooting() {
-  if (bulletAshot == true && shooterAhasShot == false) {
-    bulletAposX = playerX;
+  if (bulletAshot == true) {
+    bulletAposX = shooterApos;
     bulletAmove = true;
     bulletAshot = false;
+    shooterAcanMove = false;
+  }
+
+  if (bulletBshot == true) {
+    bulletBposY = shooterBpos;
+    bulletBmove = true;
+    bulletBshot = false;
+    shooterBcanMove = false;
+  }
+
+  if (bulletCshot == true) {
+    bulletCposX = shooterCpos;
+    bulletCmove = true;
+    bulletCshot = false;
+    shooterCcanMove = false;
+  }
+
+  if (bulletDshot == true) {
+    bulletDposY = shooterDpos;
+    bulletDmove = true;
+    bulletDshot = false;
+    shooterDcanMove = false;
+  }
+
+  if (bulletAposX == playerX && bulletAposY == playerY) {
+    lives--;
+  }
+
+  if (bulletBposX == playerX && bulletBposY == playerY) {
+    lives--;
+  }
+
+  if (bulletCposX == playerX && bulletCposY == playerY) {
+    lives--;
+  }
+
+  if (bulletDposX == playerX && bulletDposY == playerY) {
+    lives--;
   }
 }
 
 void bulletMove() {
   if (bulletAmove == true) {
     ellipseMode(CENTER);
-    ellipse((bulletAposX * gridSize) - (gridSize / 2), (bulletAposY * gridSize) - (gridSize / 2), gridSize, gridSize);
+    fill(0, 200, 255);
+    ellipse((bulletAposX * gridSize) - (gridSize / 2), (bulletAposY * gridSize) - (gridSize / 2), gridSize / 2, gridSize);
 
-    print(bulletAposX, "\n");
     if (timer % speed == 0) {
       bulletAposY++;
     }
@@ -288,7 +398,59 @@ void bulletMove() {
     if (bulletAposY >= rows) {
       bulletAmove = false;
       shooterAhasShot = false;
+      shooterAcanMove = true;
       bulletAposY = 0;
+    }
+  }
+
+  if (bulletBmove == true) {
+    ellipseMode(CENTER);
+    fill(0, 200, 255);
+    ellipse((bulletBposX * gridSize) - (gridSize / 2), (bulletBposY * gridSize) - (gridSize / 2), gridSize, gridSize / 2);
+
+    if (timer % speed == 0) {
+      bulletBposX++;
+    }
+
+    if (bulletBposX >= cols) {
+      bulletBmove = false;
+      shooterBhasShot = false;
+      shooterBcanMove = true;
+      bulletBposX = 0;
+    }
+  }
+
+  if (bulletCmove == true) {
+    ellipseMode(CENTER);
+    fill(0, 200, 255);
+    ellipse((bulletCposX * gridSize) - (gridSize / 2), (bulletCposY * gridSize) - (gridSize / 2), gridSize / 2, gridSize);
+
+    if (timer % speed == 0) {
+      bulletCposY--;
+    }
+
+    if (bulletCposY <= 0) {
+      bulletCmove = false;
+      shooterChasShot = false;
+      shooterCcanMove = true;
+      bulletCposY = rows;
+    }
+  }
+
+  if (bulletDmove == true) {
+    ellipseMode(CENTER);
+    fill(0, 200, 255);
+    ellipse((bulletDposX * gridSize) - (gridSize / 2), (bulletDposY * gridSize) - (gridSize / 2), gridSize, gridSize / 2);
+
+    if (timer % speed == 0) {
+      bulletDposX--;
+    }
+
+    if (bulletDposX <= 0) {
+      bulletDmove = false;
+      shooterDhasShot = false;
+      shooterDcanMove = true;
+      bulletDposX = cols;
     }
   }
 }

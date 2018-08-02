@@ -12,7 +12,7 @@ This one isn't usable as an executable, you need the console for the array it pu
 Just a simple match 4 game. Also playable on ghoelian.github.io and julianvos.nl.
 
 # Matrix
-NEEDS PORTING TO JAVASCRIPT
+Actually I'm not sure if I can port this to JavaScript.
 I tried replicating the matrix rain effect. Doesn't look exactly like in the movies, but it's cool nonetheless.
 
 # Pong
