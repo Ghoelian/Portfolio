@@ -19,11 +19,8 @@ int dir = 3; //UP: 1, RIGHT: 2, DOWN: 3, LEFT: 4
 
 int time = 0;
 
-float fruitXfloat = random(cols-1);
-float fruitYfloat = random(rows-1);
-
-int fruitX = int(fruitXfloat);
-int fruitY = int(fruitYfloat);
+int fruitX = int(random(cols-1));
+int fruitY = int(random(rows-1));
 
 int score = 0;
 
